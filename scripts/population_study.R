@@ -120,6 +120,8 @@ abline(h=1,col='red')
 plot(gamma,R_delta_min,type='l',ylab='Rdelta_min',xlab='γ',lwd=3)
 
 R_plus_ols <- 5- 2*t(Zplus)%*% t(t(beta_plu[,1]))+ t(beta_plu[,1])%*%Gplus%*%t(t(beta_plu[,1])) 
+
+
 beta_ols<-solve(Gplus,Zplus)
 beta_cp<-solve(Gdelta,Zdelta)
 
