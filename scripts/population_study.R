@@ -78,6 +78,40 @@ p <- p %>% layout(
 p
 
 
+# Abs(RDelta) & RDelta
+
+library(plotly)
+p <- plot_ly()
+p <- p %>% add_surface(   x = ~beta1,   y = ~beta2,   z = ~abs(Rdelta),  colorscale = list(c(0, "orange"), c(1, "red")),   showscale = TRUE,   colorbar = list(title = "|RΔ| ", tickfont = list(color =  "red"),                   titlefont = list(color =  'red')),   contours = list(     x = list(show = TRUE, color = "black"),     y = list(show = TRUE, color = "black"),     z = list(show = TRUE, color = "black")   ) ) 
+p
+p<-p %>% add_surface(   x = ~beta1,   y = ~beta2,   z = ~(Rdelta),   colorscale = list(c(0, "lightgreen"), c(1,'darkgreen' )),   showscale = TRUE,   colorbar = list(title = "RΔ ", tickfont = list(color ='darkgreen'  ),    titlefont = list(color =  'darkgreen')),   contours = list(     x = list(show = TRUE, color = "black"),     y = list(show = TRUE, color = "black"),     z = list(show = TRUE, color = "black" )   ) ) 
+p <- p %>% add_markers(
+  x = 1,
+  y = 0,
+  z = 0,
+  marker = list(size = 8, color = "blue"),
+  name = paste("βCP ")
+)
+p <- p %>% layout(
+  title = list(
+    text = "Surface Plot of RΔ and RΔ+",
+    x = 0.5,                  
+    y = 0.92,                 
+    xanchor = "center",       
+    yanchor = "top",          
+    font = list(size = 18)   
+  ),
+  scene = list(
+    xaxis = list(title = "β1"),
+    yaxis = list(title = "	β2"),
+    zaxis = list(title = "R-values (RΔ & RΔ+)")
+  ), 
+  legend = list(
+    orientation = "h",   
+    x = 0.3,             
+    y = -0.1             
+  ))
+p
 
 # Theoretical Contour 
 
