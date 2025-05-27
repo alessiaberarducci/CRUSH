@@ -3,6 +3,8 @@
 ##### NON ALIGNED SHIFTS ###################
 ############################################
 
+source("./libraries.R")
+
 Zdelta<- matrix(c(1, -1 ), nrow =2, byrow = TRUE)
 Gdelta<-matrix(c(1,-1,-1,0),nrow=2,byrow=TRUE)
 Zplus<-matrix(c(3,-5),ncol=1)
@@ -43,7 +45,6 @@ for (i in 1:length(beta1)) {
 
 # Abs(Rdelta) & Rdelta+
 
-library(plotly)
 p <- plot_ly()
 p <- p %>% add_surface(   x = ~beta1,   y = ~beta2,   z = ~abs(Rdelta),  colorscale = list(c(0, "orange"), c(1, "red")),   showscale = TRUE,   colorbar = list(title = "|RΔ| ", tickfont = list(color =  "red"),                   titlefont = list(color =  'red')),   contours = list(     x = list(show = TRUE, color = "black"),     y = list(show = TRUE, color = "black"),     z = list(show = TRUE, color = "black")   ) ) 
 p
