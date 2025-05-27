@@ -7,6 +7,7 @@ source("./datautil.R")
 source("./cd.R")
 source("./ols.R")
 source("./measurements.R")
+source("./libraries.R")
 
 
 set.seed(123) 
@@ -120,8 +121,6 @@ for (i in 1:n_points) {
 
 # 3D PLOT, Rdelta and Rplus
 
-library(plotly)
-library(RColorBrewer)
 palette<-brewer.pal(9,"Dark2")
 palette2<-brewer.pal(7,"BrBG")
 display.brewer.pal(7,"Accent")
