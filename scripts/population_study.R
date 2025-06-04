@@ -181,8 +181,9 @@ contour(beta1, beta2, Rdelta, level=0,xlab="β1",ylab="β2", main="Contour Plot 
 
 
 
-gamma<-seq(0,500,length=30000)
-
+#gamma<-seq(0,50,length=3000)
+gamma<-seq(0,10,length.out=5000)
+gamma<-c(gamma,100,1000,10000)
 
 beta_min<-matrix(NA,nrow=2,ncol=length(gamma))
 beta_plu<-matrix(NA,nrow=2,ncol=length(gamma))
@@ -252,7 +253,10 @@ contour(beta1, beta2, Rdelta, level=0,xlab="β1",ylab="β2", add=TRUE)
 beta_gamma_G<-matrix(NA,nrow=2,ncol=length(gamma))
 
 
-gamma<-seq(0,500,length=30000)
+
+#gamma<-seq(0,50,length=3000)
+gamma<-seq(0,10,length.out=5000)
+gamma<-c(gamma,100,1000,10000)
 
 R_delta_G <- numeric(length(gamma))  
 
