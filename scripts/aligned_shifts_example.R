@@ -95,7 +95,7 @@ for (i in seq_along(gamma)){
 
 # PLOT RDELTA vs. GAMMA 
 
-plot(gamma,Rdelta_vec,type='p',xlim=c(-1,100),xlab='γ ',ylab='R∆')
+plot(gamma,Rdelta_vec,type='l',xlim=c(-1,100),xlab='γ ',ylab='R∆')
 abline(h=0,col='red')
 
 
@@ -127,8 +127,24 @@ display.brewer.pal(7,"Accent")
 # Create matrices for surfaces
 Rdelta_matrix <- matrix(Rdelta, nrow = grid_n, ncol = grid_n, byrow = TRUE)
 Rplus_matrix  <- matrix(Rplus, nrow = grid_n, ncol = grid_n, byrow = TRUE)
-p <- plot_ly()  # Add the Rdelta surface with a yellow-to-red color scale 
-p <- p %>% add_surface(   x = ~beta1_vals,   y = ~beta2_vals,   z = ~Rdelta_matrix,   colorscale = list(c(0, "yellow"), c(1, palette[2])),   showscale = TRUE,   colorbar = list(title = "RΔ ", tickfont = list(color =  palette[2]),                   titlefont = list(color =  palette[2])),   contours = list(     x = list(show = TRUE, color = "black"),     y = list(show = TRUE, color = "black"),     z = list(show = TRUE, color = "black")   ) ) 
+p <- plot_ly()  # Add the Rdelta surface with a yellow-to-red color scale
+p <- p %>% add_surface(
+  x = ~ beta1_vals,
+  y = ~ beta2_vals,
+  z = ~ Rdelta_matrix,
+  colorscale = list(c(0, "yellow"), c(1, palette[2])),
+  showscale = TRUE,
+  colorbar = list(
+    title = "RΔ ",
+    tickfont = list(color =  palette[2]),
+    titlefont = list(color =  palette[2])
+  ),
+  contours = list(
+    x = list(show = TRUE, color = "black"),
+    y = list(show = TRUE, color = "black"),
+    z = list(show = TRUE, color = "black")
+  )
+)
 
 
 # Add the Rplus surface with a blue-to-green color scale
@@ -191,9 +207,9 @@ p <- p %>% layout(
     title = "RΔ",
     tickfont = list(color = "black"),
     titlefont = list(color = "black"),
-    x = 0.2,     # Move it further right (adjust as needed)
-    y = 0.2,      # Lower it (0 = bottom, 1 = top)
-    len = 0.5     # Shorten the colorbar
+    x = 0.2,     
+    y = 0.2,     
+    len = 0.5     
   ),
   colorbar = list(
     title = "RΔ",
