@@ -12,7 +12,7 @@ This repository contains the official implementation for the thesis **CRUSH – 
 
 ---
 
-## ⚙️ Getting Started
+## ⚙️ Prerequisites
 
 All code is implemented in **R**.
 
