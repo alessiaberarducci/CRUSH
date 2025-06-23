@@ -1,5 +1,4 @@
-<h1 align="center">CRUSH</h1>  
-<h2 align="center">Causal Regularization Under Shifted Heterogeneity</h2>
+# CRUSH, Causal Regularization Under Shifted Heterogeneity
 
 This repository contains the official implementation of the master thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**.
 
