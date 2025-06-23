@@ -14,7 +14,7 @@ The thesis extends the **Causal Regularization** framework proposed by [Kania et
 
 ---
 
-## 📁 Project Setup
+## 🚀 Project Setup
 
 All code is implemented in **R**.
 
