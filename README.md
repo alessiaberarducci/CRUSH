@@ -1,9 +1,16 @@
-# CRUSH, Causal Regularization Under Shifted Heterogeneity
+<h1 align="center">CRUSH</h1>  
+<h2 align="center">Causal Regularization Under Shifted Heterogeneity</h2>
+
+This repository contains the official implementation of the master thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**.
+
+The thesis extends the **Causal Regularization** framework proposed by [Kania et al., 2023](https://arxiv.org/abs/2302.03012), which is grounded in the principles of **invariant causal prediction** and **out-of-sample guarantees**.  
+
+**CRUSH** introduces a novel extension that handles two distinct data shifts, addressing challenges related to non-convexity and multiple local minima.
 
 
-This repository contains the official implementation for the thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**, which explores
+This repository contains the official implementation for the thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**. 
 
-**CRUSH – Causal Regularization Under Shifted Heterogeneity** is built on the principles of **invariance** and **out-of-sample guarantees**. It extends the **Causal Regularization** framework by [Kania et al., 2023](https://arxiv.org/abs/2302.03012), which leverages these ideas to identify stable causal relationships from observational data. CRUSH introduces a novel extension that handles **two distinct data shifts**, improving robustness across heterogeneous environments.
+The thesis is built on the principles of **invariance causal prediction** and **out-of-sample guarantees**. It extends the **Causal Regularization** framework by [Kania et al., 2023](https://arxiv.org/abs/2302.03012). CRUSH introduces a novel extension that handles **two distinct data shifts**, improving robustness across heterogeneous environments.
 
 
 ## 📌 Abstract
@@ -12,7 +19,7 @@ This repository contains the official implementation for the thesis **CRUSH – 
 
 ---
 
-## ⚙️ Project Setup
+## 📁 Project Setup
 
 All code is implemented in **R**.
 
