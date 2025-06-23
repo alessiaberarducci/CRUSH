@@ -8,11 +8,6 @@ The thesis extends the **Causal Regularization** framework proposed by [Kania et
 **CRUSH** introduces a novel extension that handles two distinct data shifts, addressing challenges related to non-convexity and multiple local minima.
 
 
-This repository contains the official implementation for the thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**. 
-
-The thesis is built on the principles of **invariance causal prediction** and **out-of-sample guarantees**. It extends the **Causal Regularization** framework by [Kania et al., 2023](https://arxiv.org/abs/2302.03012). CRUSH introduces a novel extension that handles **two distinct data shifts**, improving robustness across heterogeneous environments.
-
-
 ## 📌 Abstract
 
 *Causal inference seeks to uncover the cause and effect relationships between variables, often using graphs to represent dependencies and pathways. This thesis explores causal analysis followed by advanced approaches, including Causal Regularization, which integrates invariant causal prediction and out-of-sample guarantees for both observational and shifted environments. A central contribution of this work is the novel extension of the Causal Regularization method to incorporate two shifted environments, utilizing invariant prediction to develop models that maintain stable predictive relationships across diverse data distributions.*
