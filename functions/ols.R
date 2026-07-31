@@ -1,15 +1,6 @@
-##########################################
-# OLS ####################################
-##########################################
+# Pooled OLS estimator
 
-library(CVXR)
-
+# Gplus and Zplus contain the moments from both environments.
 compute_ols <- function(m) {
-  
-  beta <- Variable(rows = m$p)
-  objective <- Minimize(sum_squares(m$Gplus %*% beta - m$Zplus))
-  problem <- Problem(objective)
-  sol <- solve(problem)
-  
-  return(sol$getValue(beta))
+  qr.solve(m$Gplus, m$Zplus)
 }

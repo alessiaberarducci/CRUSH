@@ -1,3 +1,3 @@
-library(plotly)
-library(ggplot2)
-library(RColorBrewer)
+# Package requirements
+
+# The analysis and visualizations use base R only.
