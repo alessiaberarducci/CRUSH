@@ -61,13 +61,18 @@ pooled_covariates <- rbind(
   environment_l21[, candidate_predictors, drop = FALSE],
   environment_l22[, candidate_predictors, drop = FALSE]
 )
-is_varying <- vapply(
-  pooled_covariates,
-  function(values) length(unique(values[is.finite(values)])) > 1,
+has_within_environment_variation <- vapply(
+  candidate_predictors,
+  function(variable) {
+    values_1 <- environment_l21[[variable]]
+    values_2 <- environment_l22[[variable]]
+    length(unique(values_1[is.finite(values_1)])) > 1L ||
+      length(unique(values_2[is.finite(values_2)])) > 1L
+  },
   logical(1)
 )
-predictors <- candidate_predictors[is_varying]
-constant_predictors <- candidate_predictors[!is_varying]
+predictors <- candidate_predictors[has_within_environment_variation]
+constant_predictors <- candidate_predictors[!has_within_environment_variation]
 required_columns <- c(predictors, "ir_2")
 
 # Standardization is needed because the raw moment matrix is numerically singular.
@@ -416,7 +421,7 @@ cat("Sample sizes:", nrow(data$Xe), "and", nrow(data$Xo), "\n")
 cat("Pooled response center:", response_center, "\n")
 cat("Number of varying covariates:", length(predictors), "\n")
 cat(
-  "Constant covariates excluded:",
+  "Covariates without within-environment variation excluded:",
   paste(constant_predictors, collapse = ", "), "\n"
 )
 cat(

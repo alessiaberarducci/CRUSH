@@ -5,7 +5,7 @@ Sys.setenv(
   CHAMBER_ENVIRONMENT_1 = "uniform_t_vis_2_strong.csv",
   CHAMBER_ENVIRONMENT_2 = "uniform_red_mid.csv",
   CHAMBER_OUTPUT_SUFFIX = "_3",
-  CHAMBER_EXCLUDE_PREDICTORS = "t_vis_2",
+  CHAMBER_EXCLUDE_PREDICTORS = "",
   CHAMBER_DIRECT_Y_MIN = "-1800"
 )
 source("script/chamber.R")
