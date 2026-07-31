@@ -8,7 +8,7 @@ source("functions/measurements.R")
 source("functions/cross_valid_fun_n.R")
 source("functions/visualizations.R")
 
-# Read interventions on two distinct direct causes of the target sensor.
+# Read two configurable training environments; defaults reproduce Chamber 1.
 data_folder <- "lt_interventions_standard_v1"
 environment_file_1 <- Sys.getenv(
   "CHAMBER_ENVIRONMENT_1", "uniform_l_21_mid.csv"
@@ -27,10 +27,10 @@ chamber_output_file <- function(directory, stem, extension) {
     paste0(stem, chamber_output_suffix, ".", extension)
   )
 }
-environment_l21 <- read.csv(
+training_environment_1 <- read.csv(
   file.path(data_folder, environment_file_1)
 )
-environment_l22 <- read.csv(
+training_environment_2 <- read.csv(
   file.path(data_folder, environment_file_2)
 )
 
@@ -42,7 +42,9 @@ manually_excluded_predictors <- trimws(strsplit(
 manually_excluded_predictors <- manually_excluded_predictors[
   nzchar(manually_excluded_predictors)
 ]
-common_columns <- intersect(names(environment_l21), names(environment_l22))
+common_columns <- intersect(
+  names(training_environment_1), names(training_environment_2)
+)
 candidate_predictors <- setdiff(
   common_columns,
   c(metadata, "ir_2", manually_excluded_predictors)
@@ -50,22 +52,22 @@ candidate_predictors <- setdiff(
 is_numeric <- vapply(
   candidate_predictors,
   function(variable) {
-    is.numeric(environment_l21[[variable]]) &&
-      is.numeric(environment_l22[[variable]])
+    is.numeric(training_environment_1[[variable]]) &&
+      is.numeric(training_environment_2[[variable]])
   },
   logical(1)
 )
 candidate_predictors <- candidate_predictors[is_numeric]
 
 pooled_covariates <- rbind(
-  environment_l21[, candidate_predictors, drop = FALSE],
-  environment_l22[, candidate_predictors, drop = FALSE]
+  training_environment_1[, candidate_predictors, drop = FALSE],
+  training_environment_2[, candidate_predictors, drop = FALSE]
 )
 has_within_environment_variation <- vapply(
   candidate_predictors,
   function(variable) {
-    values_1 <- environment_l21[[variable]]
-    values_2 <- environment_l22[[variable]]
+    values_1 <- training_environment_1[[variable]]
+    values_2 <- training_environment_2[[variable]]
     length(unique(values_1[is.finite(values_1)])) > 1L ||
       length(unique(values_2[is.finite(values_2)])) > 1L
   },
@@ -81,7 +83,9 @@ predictor_scale <- vapply(
   pooled_covariates[, predictors, drop = FALSE],
   sd, numeric(1)
 )
-response_center <- mean(c(environment_l21$ir_2, environment_l22$ir_2))
+response_center <- mean(c(
+  training_environment_1$ir_2, training_environment_2$ir_2
+))
 
 # Use the continuous infrared intensity as the response.
 make_environment <- function(chamber_data) {
@@ -97,13 +101,13 @@ make_environment <- function(chamber_data) {
   )
 }
 
-env_l21 <- make_environment(environment_l21)
-env_l22 <- make_environment(environment_l22)
+prepared_environment_1 <- make_environment(training_environment_1)
+prepared_environment_2 <- make_environment(training_environment_2)
 data <- list(
-  Xe = env_l21$X,
-  ye = env_l21$y,
-  Xo = env_l22$X,
-  yo = env_l22$y
+  Xe = prepared_environment_1$X,
+  ye = prepared_environment_1$y,
+  Xo = prepared_environment_2$X,
+  yo = prepared_environment_2$y
 )
 
 # Select gamma using five-fold cross-validation.
@@ -270,14 +274,24 @@ write_conditional_variance_pdf <- function(
   graphics::plot.window(xlim = c(0, 1), ylim = c(0, n_table_rows + 2.2))
   column_x <- c(0.02, 0.34, 0.50, 0.64, 0.80, 0.96)
   column_alignment <- c(0, 1, 1, 1, 1, 1)
-  column_headers <- c(
-    "Parameter", "Beta hat", "Variance", "Std. error",
-    "Beta / std. error", "Absolute value"
+  beta_header <- switch(
+    estimator_label,
+    OLS = expression(hat(beta)[OLS]),
+    CV = expression(hat(beta)[CV])
+  )
+  ratio_header <- switch(
+    estimator_label,
+    OLS = expression(hat(beta)[OLS] / SE),
+    CV = expression(hat(beta)[CV] / SE)
+  )
+  column_headers <- list(
+    "Parameter", beta_header, "Variance", "Std. error",
+    ratio_header, "Absolute value"
   )
   header_y <- n_table_rows + 1.25
   for (j in seq_along(column_x)) {
     graphics::text(
-      column_x[j], header_y, column_headers[j],
+      column_x[j], header_y, column_headers[[j]],
       adj = c(column_alignment[j], 0.5), font = 2, cex = 0.82
     )
   }
@@ -400,7 +414,9 @@ if (show_plots) {
 }
 
 # Report the standardized CR effects used in the TikZ causal-effect graph.
-response_sd <- sd(c(environment_l21$ir_2, environment_l22$ir_2))
+response_sd <- sd(c(
+  training_environment_1$ir_2, training_environment_2$ir_2
+))
 direct_cause_graph <- data.frame(
   cause = direct_causes,
   beta_hat = beta_cr[direct_cause_index],
