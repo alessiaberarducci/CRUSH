@@ -78,22 +78,51 @@ centered_cross_validation <- function(
   fold_e <- fold_assignment$environment_e
   fold_o <- fold_assignment$environment_o
   folds <- length(unique(fold_e))
+  gamma_values <- as.numeric(names(estimators))
+  foldwise <- matrix(
+    NA_real_, nrow = folds, ncol = length(gamma_values),
+    dimnames = list(NULL, names(estimators))
+  )
 
-  foldwise <- vapply(estimators, function(estimator) {
-    vapply(seq_len(folds), function(fold) {
-      raw_training <- subset_data(data, fold_e != fold, fold_o != fold)
-      raw_validation <- subset_data(data, fold_e == fold, fold_o == fold)
-      centering <- compute_common_centering(raw_training)
-      training <- centering$data
-      validation <- apply_common_centering(raw_validation, centering)
-      beta <- estimator(training)
-      if (validation_loss == "ours") {
-        calc_Rdelta(validation, beta)
-      } else {
-        kania_validation_loss(validation, beta)
-      }
-    }, numeric(1))
-  }, numeric(folds))
+  for (fold in seq_len(folds)) {
+    raw_training <- subset_data(data, fold_e != fold, fold_o != fold)
+    raw_validation <- subset_data(data, fold_e == fold, fold_o == fold)
+    centering <- compute_common_centering(raw_training)
+    training <- centering$data
+    validation <- apply_common_centering(raw_validation, centering)
+
+    # Compute fold moments once and reuse them along the complete gamma path.
+    training_moments <- build_matrices(training)
+    beta_cp <- drop(compute_cd(training_moments))
+    beta_path <- vapply(gamma_values, function(gamma) {
+      drop(solve(
+        training_moments$Gplus +
+          gamma * training_moments$Gdelta_plus,
+        training_moments$Zplus +
+          gamma * training_moments$Gdelta_plus %*% beta_cp
+      ))
+    }, numeric(training_moments$p))
+
+    if (validation_loss == "ours") {
+      validation_moments <- build_matrices(validation)
+      validation_cp <- drop(compute_cd(validation_moments))
+      beta_difference <- sweep(beta_path, 1, validation_cp, "-")
+      foldwise[fold, ] <- colSums(
+        beta_difference *
+          (validation_moments$Gdelta_plus %*% beta_difference)
+      )
+    } else {
+      residual_e <- sweep(
+        validation$Xe %*% beta_path, 1, validation$ye, "-"
+      )
+      residual_o <- sweep(
+        validation$Xo %*% beta_path, 1, validation$yo, "-"
+      )
+      foldwise[fold, ] <- abs(
+        colMeans(residual_e^2) - colMeans(residual_o^2)
+      )
+    }
+  }
 
   mean_loss <- colMeans(foldwise)
   best <- which.min(mean_loss)
@@ -225,23 +254,35 @@ summarise_nested_cv <- function(results) {
   }))
 }
 
-plot_test_risks <- function(risks, gamma, file) {
+plot_test_risks <- function(
+    risks, gamma, file = NULL, second_label = "CR", title = NULL) {
   # Save the distribution of unseen-environment risks.
   all_risks <- c(risks$OLS, risks$CR)
   risk_range <- range(all_risks, finite = TRUE)
   y_padding <- max(0.02, 0.05 * diff(risk_range))
   y_limits <- c(max(0, risk_range[1] - y_padding), risk_range[2] + y_padding)
 
-  grDevices::pdf(file, width = 6, height = 4.5, useDingbats = FALSE)
-  on.exit(grDevices::dev.off())
+  if (!is.null(file)) {
+    grDevices::pdf(file, width = 6, height = 4.5, useDingbats = FALSE)
+    on.exit(grDevices::dev.off())
+  } else {
+    if (grDevices::dev.cur() == 1L) {
+      grDevices::dev.new(width = 6, height = 4.5)
+    }
+    layout(1)
+    par(mfrow = c(1, 1))
+  }
+  method_risks <- list(risks$OLS, risks$CR)
+  names(method_risks) <- c("OLS", second_label)
   boxplot(
-    list(OLS = risks$OLS, CR = risks$CR),
+    method_risks,
     ylab = expression(R[e](beta)),
     ylim = y_limits,
+    main = title,
     outline = FALSE
   )
   stripchart(
-    list(risks$OLS, risks$CR), vertical = TRUE, method = "jitter",
+    method_risks, vertical = TRUE, method = "jitter",
     add = TRUE, pch = 16, cex = 0.6, col = grDevices::adjustcolor("black", 0.5)
   )
   invisible(file)
