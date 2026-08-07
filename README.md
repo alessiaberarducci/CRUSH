@@ -1,15 +1,19 @@
-# CRUSH, Causal Regularization Under Shifted Heterogeneity
+# Causal Regularization for Robust Prediction
 
-This repository contains the official implementation of the master thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**.
+This repository contains the implementation of the master thesis **CRUSH – Causal Regularization Under Shifted Heterogeneity**.
 
-The thesis extends the **Causal Regularization** framework proposed by [Kania et al., 2023](https://arxiv.org/abs/2302.03012), which is grounded in the principles of **invariant causal prediction** and **out-of-sample guarantees**.  
+The thesis extends the **Causal Regularization** framework proposed by [Kania and Wit, 2025](https://arxiv.org/abs/2302.03012), which is grounded in the principles of **invariant causal prediction** and **out-of-sample guarantees**.  
 
 **CRUSH** introduces a novel extension that handles two distinct data shifts, addressing challenges related to non-convexity and multiple local minima.
 
 
 ## 📌 Abstract
 
-*Causal inference seeks to uncover the cause and effect relationships between variables, often using graphs to represent dependencies and pathways. This thesis explores causal analysis followed by advanced approaches, including Causal Regularization, which integrates invariant causal prediction and out-of-sample guarantees for both observational and shifted environments. A central contribution of this work is the novel extension of the Causal Regularization method to incorporate two shifted environments, utilizing invariant prediction to develop models that maintain stable predictive relationships across diverse data distributions.*
+Prediction is one of the most important uses of statistical methods. However, predictive systems typically struggle when the environment in which they were trained changes. The central research question is to identify and estimate stable models when only heterogeneous and potentially unknown environments are available. Existing approaches like Causal Dantzig [Rothenh¨ausler et al.,2019](https://arxiv.org/pdf/1706.06159) and Causal Regularization [Kania and Wit, 2025](https://arxiv.org/abs/2302.03012) directly identify the causal parameter as the unique solution with equal residual moments across environments. We relax assumptions to obtain a robust best linear predictor without requiring an unperturbed environment or linear shifts. Causal interpretation is recovered under the inner-product invariance condition and when the conditional mean of the target given its causal parents remains invariant across environments.
+
+We generalize Causal Regularization to a framework that uses two environments drawn from a common class $\mathcal{U}$ and measures the differences between them through a generalized risk difference induced by changes in second-order moments of the covariates and response. In this setting, the risk difference may be non-convex and may exhibit saddle-point geometry. We show that the parameter $\beta^\star$ is characterized as a stationary point of this risk difference. By defining a sieve of out-of-sample distributions, we derive a worst-risk decomposition over increasing classes of environments and obtain a closed-form estimator ${\beta_\gamma}$ that interpolates between OLS and the Regularization limit solution. 
+
+Our results show that the proposed estimator can achieve prediction stability over a broad class of perturbed environments, even when trained on a limited set. The framework separates two goals: robustness as a stable prediction under weak assumptions and causality as a stronger property obtained with additional invariance structure.
 
 ---
 
